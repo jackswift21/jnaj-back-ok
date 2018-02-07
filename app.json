@@ -1,0 +1,8 @@
+{
+  "name": "Jack Needs A Job 2: Node.js",
+  "description": "Sample NodeJS application",
+  "repository": "https://github.com/jackswift21/jack-needs-a-job",
+  "logo": "https://cdn.rawgit.com/heroku/node-js-getting-started/master/public/node.svg",
+  "keywords": ["node", "express", "heroku"],
+  "image": "heroku/nodejs"
+}
