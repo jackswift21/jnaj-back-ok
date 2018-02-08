@@ -1,13 +1,14 @@
-var mySidebar = document.getElementById("mySidebar");
-function w3_open() {
-    if (mySidebar.style.display === 'block') {
-        mySidebar.style.display = 'none';
-    } else {
-        mySidebar.style.display = 'block';
-    }
-}
-
-// Close the sidebar with the close button
-function w3_close() {
-    mySidebar.style.display = "none";
+var mySidebar = $("#mySidebar");
+function open_sidebar(){
+	if(mySidebar.is(':hidden')){
+		mySidebar
+		.removeClass("w3-animate-left-hide")
+		.addClass("w3-animate-left")
+		.show();}
+	else close_sidebar()();}
+function close_sidebar(){
+	mySidebar
+	.removeClass("w3-animate-left")
+	.addClass("w3-animate-left-hide");
+	setTimeout(() => mySidebar.hide(),400);
 }
