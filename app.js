@@ -16,7 +16,7 @@ const express = require('express');
   //sock = require('./sockets')(io)
 	//config = require('./config'),
   //require('./config/passport');
-  //jnaj_connect = require('./jnaj-connect').connect,
+  jnaj_connect = require('./jnaj-connect').connect,
   isProd = process.env.NODE_ENV === 'production',
   PORT = process.env.PORT || 3000,
   DB = process.env.MONGODB_URI || "mongodb://js21_admin0_db:l0ne21star20!db"+
@@ -58,7 +58,7 @@ express()
     urgency:req.body.urgency}))*/
   //.get('/ad',(req,res) => res.render('ad'))
   //.get('/simon',(req,res) => res.render('simon',{results:require('./leaders').leader}))
-  //.post('/connect',jnaj_connect,(req,res) => res.json({connect:true}))
+  .post('/connect',jnaj_connect,(req,res) => res.json({connect:true}))
   //.use(require('./routes'));
   .use((req,res,next) => {
     var err = new Error('Not Found');
@@ -67,6 +67,7 @@ express()
   .use((err,req,res,next) => {
     if(!isProd) here(err.stack);
     res.status(err.status||500).json({name:!isProd?err:{},message:err.message});})
+  .set('port',PORT)
   .listen(PORT,() => here(`JNAJ_Api listening on ${ PORT }...`));
 if(!isProd) mongoose.set('debug',false);
 mongoose.connect(DB,e => e?here(e):here('JNAJ_MongoDB on the cloud...'));

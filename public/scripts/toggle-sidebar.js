@@ -1,4 +1,4 @@
-var mySidebar = $("#mySidebar");
+/*var mySidebar = $("#mySidebar");
 function open_sidebar(){
 	if(mySidebar.is(':hidden')){
 		mySidebar
@@ -11,6 +11,6 @@ function close_sidebar(){
 	.removeClass("w3-animate-left")
 	.addClass("w3-animate-left-hide");
 	setTimeout(() => mySidebar.hide(),400);
-}
+}*/
 
 //sidebar close hiccups on route change, ugh.
