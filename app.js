@@ -59,6 +59,7 @@ express()
   //.get('/ad',(req,res) => res.render('ad'))
   //.get('/simon',(req,res) => res.render('simon',{results:require('./leaders').leader}))
   .post('/connect',jnaj_connect,(req,res) => res.json({connect:true}))
+  .post('/apiError',(req,res) => {here(req.body.apiError);next()},(req,res) => res.json({connect:true}))
   //.use(require('./routes'));
   .use((req,res,next) => {
     var err = new Error('Not Found');
