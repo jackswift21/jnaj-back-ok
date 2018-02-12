@@ -52,27 +52,28 @@ express()
 if(!isProd) mongoose.set('debug',false);
 mongoose.connect(DB,e => e?here(e):here('JNAJ_MongoDB on the cloud...'));
 
-/*.get('/main',(req,res) => res.render('main'))
-.get('/search',(req,res) => res.render('search'))
-.post('/search',(req,res) => {
-  here(req.body);
-  res.json({frameworks:req.body.frameworks,urgency:req.body.urgency})})
-.get('/about',(req,res) => res.render('about'))
-.get('/profiles',(req,res) => res.render('team'))
-.get('/samples',(req,res) => res.render('portfolio'))
-.get('/simon',(req,res) => res.render('simon'))
-.get('/pricing',(req,res) => res.render('pricing'))
-.get('/contact',(req,res) => res.render('contact'))
-.get('/aboutJack',(req,res) => res.render('bio'))
-.get('/ad',(req,res) => res.render('ad'))
-.get('/articles',(req,res) => res.render('articles'))
-.get('/hireMe',(req,res) => res.render('hireme'))
-.post('/hireMe',(req,res) => res.json({
-  recruiter:req.body.recruiterName,
-  frontEnd:req.body.frontEnd,
-  urgency:req.body.urgency}))
-.get('/ad',(req,res) => res.render('ad'))
-.get('/simon',(req,res) => res.render('simon',{results:require('./leaders').leader}))*/
+/*Routes to Front End EJS Views
+  .get('/main',(req,res) => res.render('main'))
+  .get('/search',(req,res) => res.render('search'))
+  .post('/search',(req,res) => {
+    here(req.body);
+    res.json({frameworks:req.body.frameworks,urgency:req.body.urgency})})
+  .get('/about',(req,res) => res.render('about'))
+  .get('/profiles',(req,res) => res.render('team'))
+  .get('/samples',(req,res) => res.render('portfolio'))
+  .get('/simon',(req,res) => res.render('simon'))
+  .get('/pricing',(req,res) => res.render('pricing'))
+  .get('/contact',(req,res) => res.render('contact'))
+  .get('/aboutJack',(req,res) => res.render('bio'))
+  .get('/ad',(req,res) => res.render('ad'))
+  .get('/articles',(req,res) => res.render('articles'))
+  .get('/hireMe',(req,res) => res.render('hireme'))
+  .post('/hireMe',(req,res) => res.json({
+    recruiter:req.body.recruiterName,
+    frontEnd:req.body.frontEnd,
+    urgency:req.body.urgency}))
+  .get('/ad',(req,res) => res.render('ad'))
+  .get('/simon',(req,res) => res.render('simon',{results:require('./leaders').leader}))*/
 
 /*function handle_inc_req(req,res){
   req._url = url.parse(req.url,true);
