@@ -1,9 +1,0 @@
-require('./User');
-require('./Article');
-require('./Comment');
-require('./UserProfile');
-require('./VendorProfile');
-require('./AdminProfile');
-require('./Review');
-//require('./Order');
-//require('./Menu');

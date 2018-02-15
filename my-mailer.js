@@ -12,9 +12,9 @@ var mailOptions = {
   to: 'jlpowersjr@aol.com',
   subject: 'Test Email',
   text: 'This is a test email from Fudezi Api Service. '+
-    'You may acknowledge your receipt of this email by texting "got it" to 281-703-8887. '+
+    'Click here to confirm acknowledge your receipt of this email. '+
     'DO NOT RESPOND TO EMAIL DIRECTLY. '+
-    'Thank you, Jack P - Fudezi LLC, 2018'};
+    'Thank you, Jack.'};
 transporter.sendMail(mailOptions,function(err,info){
   if(err){console.log(err);}
   else {console.log('Email sent: ' + info.response);}});

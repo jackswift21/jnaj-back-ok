@@ -1,7 +1,7 @@
 require('./here');
-require('./models');
+//require('./models');
 require('./config/passport');
-require('./mailer');
+require('./my-mailer');
 //require('./sockets')(io);
 const express = require('express');
   path = require('path'),
@@ -21,37 +21,32 @@ const express = require('express');
   //require('./config/passport');
   jnaj_connect = require('./jnaj-connect').connect,
   isProd = process.env.NODE_ENV === 'production',
-  PORT = process.env.PORT || 3000,
-  DB = process.env.MONGODB_URI || "mongodb://js21_admin0_db:l0ne21star20!db"+
-    "@cluster0-shard-00-00-kqjd9.mongodb.net:27017,"+
-    "cluster0-shard-00-01-kqjd9.mongodb.net:27017,"+
-    "cluster0-shard-00-02-kqjd9.mongodb.net:27017/test?"+
-    "ssl=true&replicaSet=Cluster0-shard-0&authSource=admin";
-var app = express();
+  PORT = config.port,
+  DB = config.db,
+  app = express();
 app
   .use(cors())
   .use(require('morgan')('dev'))
   .use(bodyParser.urlencoded({extended:true}))
   .use(bodyParser.json())
   .use(require('method-override')())
-  .use(express.static(path.join(__dirname,'public')))
+  //.use(express.static(path.join(__dirname,'public')))
   .use('/uploads',express.static(__dirname +'/uploads'))
   .set('views', path.join(__dirname,'views'))
   .set('view engine','ejs')
   .use(session({secret:'tacos_or_bust',cookie:{maxAge:60000},resave:false,saveUninitialized:false}))
-let isProd = process.env.NODE_ENV === 'production';
 if(!isProd){
   app.use(errorhandler());
   mongoose.connect(DB,e => e?here(e):here('JNAJ_MongoDB on the cloud...'))
   mongoose.set('debug',false);}
 else{mongoose.connect(process.env.MONGODB_URI);}
 app
-  .get('/',(req,res) => res.render('intro'))
+  .get('/',(req,res) => res.render('home'))
   .post('/connect',jnaj_connect,(req,res) => res.json({connect:true}))
   .post('/apiError',
     (req,res,next) => {here(req.body.apiError);next()},
     (req,res) => res.json({errReceived:true}))
-  .use(require('./routes'))
+  //.use(require('./routes'))
   .use((req,res,next) => {
     var err = new Error('Not Found');
     err.status = 404;
