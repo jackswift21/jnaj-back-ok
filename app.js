@@ -2,6 +2,7 @@ require('./here');
 //require('./models');
 require('./config/passport');
 require('./my-mailer');
+var profiles = require('./data/profiles');
 //require('./sockets')(io);
 const express = require('express');
   path = require('path'),
@@ -43,6 +44,7 @@ else{mongoose.connect(process.env.MONGODB_URI);}
 app
   .get('/',(req,res) => res.render('home'))
   .post('/connect',jnaj_connect,(req,res) => res.json({connect:true}))
+  .get('/profiles',(req,res) => res.json({profiles:profiles}))
   .post('/contact',
     (req,res,next) => {here(req.body);next()},
     (req,res) => res.json({connect:true}))
