@@ -56,7 +56,7 @@ app
           '<p>Visitor Name: '+req.body.name+'</p>'+
           '<p>Visitor Email: '+req.body.email+'</p>'+
           '<p>Visitor Message: '+req.body.message+'</p>'})
-      .then(msg => req.comfirm = msg)
+      .then(msg => req.confirm = msg)
       .then(next())},
     (req,res) => res.json({confirm:req.confirm}))
   .post('/apiError',
