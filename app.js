@@ -56,9 +56,11 @@ app
           '<p>Visitor Name: '+req.body.name+'</p>'+
           '<p>Visitor Email: '+req.body.email+'</p>'+
           '<p>Visitor Message: '+req.body.message+'</p>'})
-      .then(msg => {here(msg);req.confirm = msg})
+      .then(msg => req.confirm = msg)
       .then(next())},
-    (req,res) => res.json({confirm:req.confirm}))
+    (req,res) => {
+      here(req.confirm);
+      res.json({confirm:req.confirm})})
   .post('/apiError',
     (req,res,next) => {here(req.body.apiError);next()},
     (req,res) => res.json({errReceived:true}))
