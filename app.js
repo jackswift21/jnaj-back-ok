@@ -55,7 +55,7 @@ app
           '<p>Visitor Name: '+req.body.name+'</p>'+
           '<p>Visitor Email: '+req.body.email+'</p>'+
           '<p>Visitor Message: '+req.body.message+'</p>'})
-      .then(msg => {req.confirmMsg = msg;next()}),
+      .then(msg => {req.confirmMsg = msg;next()});},
     (req,res) => {
       here(req.confirmMsg);
       res.json({confirm:req.confirm})})
