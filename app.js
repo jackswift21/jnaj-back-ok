@@ -48,7 +48,7 @@ app
   .post('/contact',
     (req,res,next) => {
       mailer.send({
-        _from:'Jack <jack1.fu.dz@gmail.com>',
+        _from:'Admin <jackneedsajob01@gmail.com>',
         _to:'Jack <jack1.fu.dz@gmail.com>',
         _subject:req.body.subject,
         _html:
