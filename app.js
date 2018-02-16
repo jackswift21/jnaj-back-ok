@@ -1,7 +1,6 @@
 require('./here');
 //require('./models');
 require('./config/passport');
-require('./my-mailer');
 var profiles = require('./data/profiles');
 //require('./sockets')(io);
 const express = require('express');
@@ -19,6 +18,7 @@ const express = require('express');
   io = require('socket.io'),
   //sock = require('./sockets')(io)
 	config = require('./config'),
+  mailer = require('./my-mailer')
   //require('./config/passport');
   jnaj_connect = require('./jnaj-connect').connect,
   isProd = process.env.NODE_ENV === 'production',
@@ -46,8 +46,19 @@ app
   .post('/connect',jnaj_connect,(req,res) => res.json({connect:true}))
   .get('/profiles',(req,res) => res.json({profiles:profiles}))
   .post('/contact',
-    (req,res,next) => {here(req.body);next()},
-    (req,res) => res.json({connect:true}))
+    (req,res,next) => {
+      here(req.body);
+      mailer.send({
+        _from:'Jack <jack1.fu.dz@gmail.com>',
+        _to:'Jack <jack1.fu.dz@gmail.com>',
+        _subject:req.body.subject,
+        _html:
+          '<p>Visitor Name: '+req.body.name+'</p>'+
+          '<p>Visitor Email: '+req.body.email+'</p>'+
+          '<p>Visitor Message: '+req.body.message+'</p>'})
+      .then(msg => req.comfirm = msg)
+      .then(next())},
+    (req,res) => res.json({confirm:req.confirm}))
   .post('/apiError',
     (req,res,next) => {here(req.body.apiError);next()},
     (req,res) => res.json({errReceived:true}))
