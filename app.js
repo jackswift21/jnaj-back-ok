@@ -47,7 +47,6 @@ app
   .get('/profiles',(req,res) => res.json({profiles:profiles}))
   .post('/contact',
     (req,res,next) => {
-      here(req.body);
       mailer.send({
         _from:'Jack <jack1.fu.dz@gmail.com>',
         _to:'Jack <jack1.fu.dz@gmail.com>',
@@ -56,10 +55,10 @@ app
           '<p>Visitor Name: '+req.body.name+'</p>'+
           '<p>Visitor Email: '+req.body.email+'</p>'+
           '<p>Visitor Message: '+req.body.message+'</p>'})
-      .then(msg => req.confirm = msg)
+      .then(msg => req.confirmMsg = msg)
       .then(next())},
     (req,res) => {
-      here(req.confirm);
+      here(req.confirmMsg);
       res.json({confirm:req.confirm})})
   .post('/apiError',
     (req,res,next) => {here(req.body.apiError);next()},
