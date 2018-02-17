@@ -44,6 +44,7 @@ else{mongoose.connect(process.env.MONGODB_URI);}
 app
   .get('/',(req,res) => res.render('home'))
   .post('/connect',jnaj_connect,(req,res) => res.json({connect:true}))
+  .get('/search',(req,res) => res.json({profiles:profiles}))
   .get('/profiles',(req,res) => res.json({profiles:profiles}))
   .post('/contact',
     (req,res,next) => {
