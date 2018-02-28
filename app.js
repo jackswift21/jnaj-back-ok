@@ -1,7 +1,6 @@
 require('./here');
-//require('./models');
+require('./models');
 require('./config/passport');
-var profiles = require('./data/profiles');
 //require('./sockets')(io);
 const express = require('express');
   path = require('path'),
@@ -18,12 +17,11 @@ const express = require('express');
   io = require('socket.io'),
   //sock = require('./sockets')(io)
 	config = require('./config'),
-  mailer = require('./my-mailer')
-  //require('./config/passport');
-  jnaj_connect = require('./jnaj-connect').connect,
+  mailer = require('./my-mailer'),
   isProd = process.env.NODE_ENV === 'production',
   PORT = config.port,
   DB = config.db,
+  DBConnMsg = config.db_conn_msg,
   app = express();
 app
   .use(cors())
@@ -38,15 +36,13 @@ app
   .use(session({secret:'tacos_or_bust',cookie:{maxAge:60000},resave:false,saveUninitialized:false}))
 if(!isProd){
   app.use(errorhandler());
-  mongoose.connect(DB,e => e?here(e):here('JNAJ_MongoDB on the cloud...'))
+  mongoose.connect(DB,e => e?here(e):here(`JNAJ_MongoDB ${DBConnMsg}`))
   mongoose.set('debug',false);}
 else{mongoose.connect(process.env.MONGODB_URI);}
 app
   .get('/',(req,res) => res.render('home'))
-  .post('/connect',jnaj_connect,(req,res) => res.json({connect:true}))
-  .get('/search',(req,res) => res.json({profiles:profiles}))
-  .get('/profiles',(req,res) => res.json({profiles:profiles}))
-  .post('/contact',
+  /*.get('/profiles',(req,res) => res.json({profiles:profiles}))*/
+  /*.post('/contact',
     (req,res,next) => {
       mailer.send({
         _from:'JNAJ <jackneedsajob01@gmail.com>',
@@ -59,11 +55,11 @@ app
       .then(msg => {req.confirmMsg = msg;next()});},
     (req,res) => {
       here(req.confirmMsg);
-      res.json({confirm:req.confirm})})
+      res.json({confirm:req.confirm})})*/
   .post('/apiError',
     (req,res,next) => {here(req.body.apiError);next()},
     (req,res) => res.json({errReceived:true}))
-  //.use(require('./routes'))
+  .use(require('./routes'))
   .use((req,res,next) => {
     var err = new Error('Not Found');
     err.status = 404;

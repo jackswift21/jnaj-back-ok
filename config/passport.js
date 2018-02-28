@@ -3,20 +3,21 @@ const passport = require('passport'),
 	JwtStrategy = require('passport-jwt').Strategy,
 	ExtractJwt = require('passport-jwt').ExtractJwt,
 	secret = require('./').secret,
-	User = require('../models/User');
+	mongoose = require('mongoose'),
+	User = mongoose.model('JNAJ_User');
 passport.use('auth-register',new LocalStrategy({
 	usernameField:'user[handle]',
-	passwordField:'user[pin]',
+	passwordField:'user[pswd]',
 	passReqToCallback:true},function(req,handle,pin,done){
-	let newUser = req.body.user;
+	let newUser = req.body.user,role = req.body.user.role,device = req.body.user.device;
 	User.findOne({handle:handle})
-	.then(existing => 
-		existing?done(null,false,errors[0]):
-		User.create(newUser,done).then(user => done(null,user,newUser)))
+	.then(existing => existing?
+		done(null,false,errors[0]):
+		User.create(newUser,done).then(user => done(null,user,{role,device})))
 	.catch(err => done(err));}));
 passport.use('auth-login',new LocalStrategy({
 	usernameField:'user[handle]',
-	passwordField:'user[pin]',
+	passwordField:'user[pswd]',
 	passReqToCallback:true},function(req,handle,pin,done){
 		let role = req.body.user.role,device = req.body.user.device;
 		User.findOne({handle:handle})
@@ -24,30 +25,30 @@ passport.use('auth-login',new LocalStrategy({
 	    !user?done(null,false,errors[1]):
 	    !validateAcct(user)?done(null,false,validationErr):
 	    !user.validatePin(pin)?done(null,false,errors[2]):
-	    !validateSession(user,device)?done(null,false,validationErr):
-	    user.getProfile(role).then(() => done(null,user,{role:role,device:device})))   
+	    user.getProfile(role).then(() => done(null,user,{role,device}))) 
 		.catch(err => done(err))})); 
 passport.use('auth-tkn-req',new JwtStrategy({
 	jwtFromRequest:getTokenFromHeader,
 	secretOrKey:secret},function(payload,done){
+		let role = payload.role,device = payload.device;
 	  User.findOne({handle:payload.handle})
 	  .then(user => 
 	  	!user?done(null,false,errors[6])://or errors[1]
 	  	!validateAcct(user)?done(null,false,validationErr):
-	  	!validateSession(user,payload.device)?done(null,false,validationErr):
-	  	user.getProfile(payload.role).then(() => done(null,user,payload)))
+	  	user.getProfile(payload.role).then(() => done(null,user,{role,device})))
 	  .catch(err => done(err));}));
 passport.use('auth-tkn-opt',new JwtStrategy({
 	jwtFromRequest:getTokenFromHeader,
 	secretOrKey:secret},
   function(payload,done){
+  	let role = payload.role||'USER',device = payload.device||'na';
   	User.findOne({handle:payload.handle})
 	  .then(user => 
 	  	!user?done(null,user,{role:'USER'}):
 	  	!validateAcct(user)?done(null,false,validationErr):
-	  	user.getProfile(payload.role).then(() => done(null,user,{role:payload.role})))
+	  	user.getProfile(payload.role).then(() => done(null,user,{role,device})))
 	  .catch(err => done(err));}));
-passport.use('auth-verify-register',new LocalStrategy({
+passport.use('auth-verify',new LocalStrategy({
 	usernameField:'user[handle]',
 	passwordField:'user[code]',
 	passReqToCallback:true},function(req,handle,code,done){
@@ -56,7 +57,7 @@ passport.use('auth-verify-register',new LocalStrategy({
 		.then(user => 
 			!user?done(null,false,errors[1]):
 			!validateCode(user,code)?done(null,false,validationErr):
-			user.getProfile(role).then(() => done(null,user,{role:role,device:device})))
+			user.getProfile(role).then(() => done(null,user,{role,device})))
 		.catch(err => done(err));}));
 function getTokenFromHeader(req){
 	let auth = req.headers.authorization,
@@ -67,12 +68,6 @@ function validateAcct(user){
 	user.acct.status === 'D'?errors[4]:
 	user.acct.status === 'X'?errors[5]:{};
 	return !validationErr.name;}
-function validateSession(user,device){
-	here(device);
-	thisDevice = user.devices.filter(d => d.info.pseudofier === device.pseudofier)[0]||null;
-  validationErr = !thisDevice?errors[7]:thisDevice.key !== device.key?errors[8]:{};
-  here(!thisDevice,device);
-  return !validationErr.name;}
 function validateCode(user,code){
   user.acct.verified.code === code?
   (() => {user.setAcct('e');user.acct.verified.ts = Date.now()})():
@@ -87,6 +82,4 @@ const errors = [
 	{name:'acct',message:'disabled'},
 	{name:'acct',message:'deleted'},
 	{name:'token',message:'invalid'},
-	{name:'device',message:'unregistered'},
-	{name:'session',message:'changed'},
 	{name:'code',message:'invalid regstraton code'}];
