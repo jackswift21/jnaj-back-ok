@@ -4,7 +4,10 @@ const router = require('express').Router(),
 	TERMS = require('../../data/terms');
 	//Tag = mongoose.model('Article');
 
-router.get('/go',function(req,res,next){res.json({profiles:profiles});});
+router.get('/go',function(req,res,next){
+	!req.query.q?res.status(422).json(errors[1]):null;
+	let query = JSON.parse(req.query.q);
+	res.json({results:profiles});});
 router.get('/suggest',function(req,res,next){
 	let terms = [],query = req.query.q.toLowerCase(),theseTerms = [...TERMS,...newTerms];
 	terms = theseTerms.filter(term => term.v.toLowerCase().match(new RegExp(query)));
@@ -13,7 +16,7 @@ router.get('/suggest',function(req,res,next){
 	res.json({terms:terms});});
 router.post('/suggest',function(req,res,next){
 	!req.body.newTerm?res.status(422).json(errors[0]):null;
-	newTerms.push({v:req.body.newTerm,c:'unknown',userAdded:1});
+	newTerms.push(req.body.newTerm);
 	res.json({termAdded:true});});
 /*router.get('/go',function(req,res,next){
 	Article
@@ -25,7 +28,9 @@ router.post('/suggest',function(req,res,next){
 module.exports = router;
 
 var newTerms = [];
-const errors = [{name:'newTerm',message:'missing'}];
+const errors = [
+{name:'newTerm',message:'missing'},
+{name:'searchQuery',message:'missing'},];
 function termSorter(a,b){
 	let byQMatch = a.v.toLowerCase().indexOf(this) - b.v.toLowerCase().indexOf(this),
 	byAlpha = a.v.toLowerCase() === [a.v.toLowerCase(),b.v.toLowerCase()].sort()[0];
